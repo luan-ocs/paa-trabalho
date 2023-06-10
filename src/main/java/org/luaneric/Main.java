@@ -4,24 +4,39 @@ import main.java.org.luaneric.backpack.BackpackProblemSolve;
 import main.java.org.luaneric.binaryThree.CustomBinaryNode;
 import main.java.org.luaneric.binaryThree.CustomBinaryTree;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Paths;
 import java.time.Clock;
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
 public class Main {
-
     private static final Clock clock = Clock.systemUTC();
-    static String filepath100k = "/home/abas/Desktop/personal/faculdade/paa/algorithms/src/main/resources/palavras_100k.txt";
-    static String filepath200k = "/home/abas/Desktop/personal/faculdade/paa/algorithms/src/main/resources/palavras_200k.txt";
-    static String filepath300k = "/home/abas/Desktop/personal/faculdade/paa/algorithms/src/main/resources/palavras_300k.txt";
-    static String filepath400k = "/home/abas/Desktop/personal/faculdade/paa/algorithms/src/main/resources/palavras_400k.txt";
-    static String filepath500k = "/home/abas/Desktop/personal/faculdade/paa/algorithms/src/main/resources/palavras_500k.txt";
-    static String filepath600k = "/home/abas/Desktop/personal/faculdade/paa/algorithms/src/main/resources/palavras_600k.txt";
-    static String filepath700k = "/home/abas/Desktop/personal/faculdade/paa/algorithms/src/main/resources/palavras_700k.txt";
+
+    static String outputPath = Paths.get("out").toString();
+
+    static String filepath100k = Paths.get("src/main/resources/palavras_100k.txt").toString();
+    static String filepath200k = Paths.get("src/main/resources/palavras_200k.txt").toString();
+    static String filepath300k = Paths.get("src/main/resources/palavras_300k.txt").toString();
+    static String filepath400k = Paths.get("src/main/resources/palavras_400k.txt").toString();
+    static String filepath500k = Paths.get("src/main/resources/palavras_500k.txt").toString();
+    static String filepath600k = Paths.get("src/main/resources/palavras_600k.txt").toString();
+    static String filepath700k = Paths.get("src/main/resources/palavras_700k.txt").toString();
+
+    static String[] filepaths = {
+            filepath100k,
+            filepath200k,
+            filepath300k,
+            filepath400k,
+            filepath500k,
+            filepath600k,
+            filepath700k
+    };
 
     public static int compareByWord(CustomBinaryNode a, CustomBinaryNode b) {
         return a.getNodeValue().getTreeCustomValue().toString()
@@ -35,9 +50,10 @@ public class Main {
             e.printStackTrace();
         }
     }
-    public static CustomBinaryTree extractWordsFromFile(String filePath) throws IOException {
 
-        CustomBinaryTree words = new CustomBinaryTree((c1, c2) -> compareByWord((CustomBinaryNode) c1, (CustomBinaryNode) c2));
+    public static CustomBinaryTree extractWordsFromFile(String filePath) throws IOException {
+        CustomBinaryTree words = new CustomBinaryTree(
+                (c1, c2) -> compareByWord((CustomBinaryNode) c1, (CustomBinaryNode) c2));
 
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             String line;
@@ -45,56 +61,13 @@ public class Main {
                 String[] lineWords = line.split(" ");
                 for (String word : lineWords) {
                     if (!word.isEmpty()) {
-                        GenericCustomValue<String> wordToTree= new GenericCustomValue(word);
+                        GenericCustomValue wordToTree = new GenericCustomValue(word);
                         words.insert(wordToTree);
                     }
                 }
             }
         }
-
         return words;
-    }
-
-
-
-    public static void main(String[] args) throws IOException {
-
-        String[] filepaths = {
-                filepath100k,
-                filepath200k,
-                filepath300k,
-                filepath400k,
-                filepath500k,
-                filepath600k,
-                filepath700k
-        };
-
-        for (String filepath : filepaths) {
-
-             System.out.println("Lendo arquivo " +  getSizefromPath(filepath) + "\n\n");
-
-             Long[] times = generateOrderDocument(filepath, getSizefromPath(filepath), "/home/abas/Desktop/paa");
-
-             System.out.println("Relatorio das medias: ");
-
-             System.out.println("Alfabeticamente (com leitura de arquivo): " + times[0]);
-             System.out.println("Reordenando para frequencia: "+ times[1]);
-
-             System.out.println("------------------------------------------------");
-        }
-
-        System.out.println("\n\n\n Problema da mochila: \n");
-
-        CustomBinaryTree tree = extractWordsFromFile(filepath100k);
-
-        tree.setFunctionCompare((f1, f2) -> f2.getFrequency() - f1.getFrequency());
-
-        BackpackProblemSolve solver = new BackpackProblemSolve();
-
-        solver.execute(tree.toArray());
-
-
-
     }
 
     public static String getSizefromPath(String path) {
@@ -104,54 +77,72 @@ public class Main {
         return matcher.group();
     }
 
-
-
     public static Long[] generateOrderDocument(String filepath, String size, String outputBasepath) throws IOException {
+        Long averageAlf = 0L;
+        Long averageFreq = 0L;
 
-            Long averageAlf = 0L;
-            Long averageFreq = 0L;
+        for (int i = 0; i < 3; i++) {
+            Instant initAlf = clock.instant();
 
-            for(int i = 0; i < 3; i++) {
+            CustomBinaryTree tree = extractWordsFromFile(filepath);
+            String ordered = tree.printInOrder();
 
-                Instant initAlf = clock.instant();
+            Instant endAlf = clock.instant();
 
-                CustomBinaryTree tree = extractWordsFromFile(filepath);
-                String ordered = tree.printInOrder();
+            Long execTimeAlf = endAlf.toEpochMilli() - initAlf.toEpochMilli();
 
-                Instant endAlf = clock.instant();
+            System.out.println(
+                    "Tempo de execução " + execTimeAlf + " Milissegundos  - tamanho: " + size + " Lexicograficamente");
 
-                Long execTimeAlf = endAlf.toEpochMilli() - initAlf.toEpochMilli();
+            averageAlf += execTimeAlf;
 
-                System.out.println("Tempo de execução " + execTimeAlf + " Milissegundos  - tamanho: " + size + " Lexicograficamente");
+            writeStringToFile(ordered, outputBasepath + "/ordered" + size + ".txt");
 
-                averageAlf += execTimeAlf;
+            Instant initFreq = clock.instant();
 
-                writeStringToFile(ordered, outputBasepath + "/ordered" + size + ".txt");
+            tree.setFunctionCompare((c1, c2) -> c2.getFrequency() - c1.getFrequency());
+            String orderedByFreq = tree.printInOrder();
 
-                Instant initFreq = clock.instant();
+            Instant endFreq = clock.instant();
 
-                tree.setFunctionCompare((c1, c2) -> c2.getFrequency() - c1.getFrequency());
-                String orderedByFreq = tree.printInOrder();
+            Long execTimeFreq = endFreq.toEpochMilli() - initFreq.toEpochMilli();
 
-                Instant endFreq = clock.instant();
+            System.out.println(
+                    "Tempo de execução " + execTimeFreq + " Milissegundos  - tamanho: " + size + " Frequencia");
 
-                Long execTimeFreq = endFreq.toEpochMilli() - initFreq.toEpochMilli();
+            averageFreq += execTimeFreq;
+            writeStringToFile(orderedByFreq, outputBasepath + "/frequency" + size + ".txt");
+        }
+        
+        Long finalTimeFreq = averageFreq / 3;
+        Long finalTimeAlf = averageAlf / 3;
 
-                System.out.println("Tempo de execução " + execTimeFreq + " Milissegundos  - tamanho: " + size + " Frequencia");
-
-                averageFreq += execTimeFreq;
-                writeStringToFile(orderedByFreq, outputBasepath + "/frequency" + size + ".txt");
-
-
-            }
-
-            Long finalTimeFreq = averageFreq / 3;
-            Long finalTimeAlf = averageAlf / 3;
-
-            Long[] times = {finalTimeAlf, finalTimeFreq};
-            return times;
+        Long[] times = { finalTimeAlf, finalTimeFreq };
+        return times;
     }
 
+    public static void main(String[] args) throws IOException {
+        for (String filepath : filepaths) {
 
+            System.out.println("\nLendo arquivo " + getSizefromPath(filepath) + ":");
 
+            Long[] times = generateOrderDocument(filepath, getSizefromPath(filepath),
+                    outputPath);
+
+            System.out.println("Relatorio das médias: ");
+            System.out.println("Alfabeticamente (com leitura de arquivo): " + times[0]);
+            System.out.println("Reordenando para frequência: " + times[1]);
+            System.out.println("----------------------------------------------------------------------\n");
+        }
+
+        System.out.println("\nProblema da mochila:");
+
+        CustomBinaryTree tree = extractWordsFromFile(filepath100k);
+
+        tree.setFunctionCompare((f1, f2) -> f2.getFrequency() - f1.getFrequency());
+
+        BackpackProblemSolve solver = new BackpackProblemSolve();
+
+        solver.execute(tree.toArray());
+    }
 }
