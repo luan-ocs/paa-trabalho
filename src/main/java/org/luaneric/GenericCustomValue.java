@@ -1,7 +1,6 @@
 package main.java.org.luaneric;
 
 public class GenericCustomValue<T> {
-
     private int frequency;
     public T value;
 

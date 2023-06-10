@@ -3,12 +3,9 @@ package main.java.org.luaneric.backpack;
 import main.java.org.luaneric.GenericCustomValue;
 
 public class BackpackItem {
-
     private GenericCustomValue word;
-
     private double value;
     private int weight = 0;
-
 
     public BackpackItem(GenericCustomValue word, int weight) {
         this.word = word;
@@ -45,5 +42,4 @@ public class BackpackItem {
     public void setWeight(int weight) {
         this.weight = weight;
     }
-
 }

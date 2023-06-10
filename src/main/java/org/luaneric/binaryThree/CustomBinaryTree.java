@@ -20,27 +20,24 @@ public class CustomBinaryTree {
         insertRecursive(this.root, n);
     }
 
-    private void insertRecursive (CustomBinaryNode compareNode, CustomBinaryNode insert) {
-
-
-        if(compareNode == null) {
+    private void insertRecursive(CustomBinaryNode compareNode, CustomBinaryNode insert) {
+        if (compareNode == null) {
             this.root = insert;
             return;
         }
 
         int compareValue = this.functionCompare.compare(insert, compareNode);
 
-
-        if(compareValue < 0) {
-            if(compareNode.getLeft() == null) {
+        if (compareValue < 0) {
+            if (compareNode.getLeft() == null) {
                 compareNode.setLeft(insert);
                 insert.setUp(compareNode);
                 verifyBalance(compareNode);
             } else {
                 insertRecursive(compareNode.getLeft(), insert);
             }
-        } else if(compareValue > 0) {
-            if(compareNode.getRight() == null) {
+        } else if (compareValue > 0) {
+            if (compareNode.getRight() == null) {
                 compareNode.setRight(insert);
                 insert.setUp(compareNode);
                 verifyBalance(compareNode);
@@ -55,9 +52,9 @@ public class CustomBinaryTree {
     public void verifyBalance(CustomBinaryNode node) {
         int balance = node.getBalance();
 
-        if(balance == -2) {
+        if (balance == -2) {
 
-            if(height(node.getLeft().getLeft()) >= height(node.getLeft().getRight())) {
+            if (height(node.getLeft().getLeft()) >= height(node.getLeft().getRight())) {
                 node = rotateRight(node);
             } else {
                 node = doubleRotateRight(node);
@@ -65,7 +62,7 @@ public class CustomBinaryTree {
 
         } else if (balance == 2) {
 
-            if(height(node.getRight().getRight()) >= height(node.getRight().getLeft())) {
+            if (height(node.getRight().getRight()) >= height(node.getRight().getLeft())) {
                 node = rotateLeft(node);
             } else {
                 node = doubleRotateLeft(node);
@@ -73,7 +70,7 @@ public class CustomBinaryTree {
 
         }
 
-        if(node.getUp() != null) {
+        if (node.getUp() != null) {
             verifyBalance(node.getUp());
         } else {
             this.root = node;
@@ -81,21 +78,20 @@ public class CustomBinaryTree {
     }
 
     CustomBinaryNode rotateRight(CustomBinaryNode node) {
-
         CustomBinaryNode left = node.getLeft();
         left.setUp(node.getUp());
 
         node.setLeft(left.getRight());
 
-        if(node.getLeft() != null) {
+        if (node.getLeft() != null) {
             node.getLeft().setUp(node);
         }
 
         left.setRight(node);
         node.setUp(left);
 
-        if(left.getUp() != null) {
-            if(left.getUp().getRight() == node) {
+        if (left.getUp() != null) {
+            if (left.getUp().getRight() == node) {
                 left.getUp().setRight(left);
             } else if (left.getUp().getLeft() == node) {
                 left.getUp().setLeft(left);
@@ -112,8 +108,8 @@ public class CustomBinaryTree {
         node.setLeft(rotateLeft(node.getLeft()));
         return rotateRight(node);
     }
-    CustomBinaryNode rotateLeft(CustomBinaryNode node) {
 
+    CustomBinaryNode rotateLeft(CustomBinaryNode node) {
         CustomBinaryNode right = node.getRight();
         right.setUp(node.getUp());
 
@@ -140,8 +136,6 @@ public class CustomBinaryTree {
         setBalance(right);
 
         return right;
-
-
     }
 
     CustomBinaryNode doubleRotateLeft(CustomBinaryNode node) {
@@ -153,23 +147,21 @@ public class CustomBinaryTree {
         node.setBalance(height(node.getRight()) - height(node.getLeft()));
     }
 
-
     private int height(CustomBinaryNode node) {
-        if(node == null) {
+        if (node == null) {
             return -1;
         }
 
-        if(node.getLeft() == null && node.getRight() == null) {
+        if (node.getLeft() == null && node.getRight() == null) {
             return 0;
         } else if (node.getLeft() == null) {
-            return  1 + height(node.getRight());
+            return 1 + height(node.getRight());
         } else if (node.getRight() == null) {
             return 1 + height(node.getLeft());
         } else {
             return 1 + Math.max(height(node.getLeft()), height(node.getRight()));
         }
     }
-
 
     final protected ArrayList<CustomBinaryNode> inorder() {
         ArrayList<CustomBinaryNode> ret = new ArrayList<CustomBinaryNode>();
@@ -184,7 +176,7 @@ public class CustomBinaryTree {
     }
 
     final private void toArray(CustomBinaryNode node, ArrayList list) {
-        if(node == null) {
+        if (node == null) {
             return;
         }
 
@@ -203,7 +195,7 @@ public class CustomBinaryTree {
     }
 
     private void printInOrderRecursive(CustomBinaryNode root, StringBuilder value) {
-        if(root == null) {
+        if (root == null) {
             return;
         }
 
@@ -213,29 +205,22 @@ public class CustomBinaryTree {
     }
 
     public void setFunctionCompare(Comparator<CustomBinaryNode> functionCompare) {
-
         ArrayList<CustomBinaryNode> nodes = this.inorder();
 
         CustomBinaryTree reordered = new CustomBinaryTree(functionCompare);
 
-        for (CustomBinaryNode node: nodes) {
+        for (CustomBinaryNode node : nodes) {
             reordered.insert(node.getNodeValue());
         }
 
         this.root = reordered.root;
-
     }
 
     public String printInOrder() {
-
         StringBuilder ordered = new StringBuilder();
 
         printInOrderRecursive(this.root, ordered);
 
         return ordered.toString().trim();
     }
-
-
 }
-
-

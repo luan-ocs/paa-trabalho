@@ -17,7 +17,6 @@ public class CustomBinaryNode {
 
     public int getFrequency() {
         return this.value.getFrequency();
-
     }
 
     public void setFrequency(int frequency) {
@@ -68,7 +67,6 @@ public class CustomBinaryNode {
 
     @Override
     public String toString() {
-
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < this.value.getFrequency(); i++) {
             sb.append(this.value);
