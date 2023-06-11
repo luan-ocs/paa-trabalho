@@ -23,6 +23,6 @@ plt.title('Valor máximo da mochila para cada execução')
 plt.xlabel('Execução')
 plt.ylabel('Valor máximo da mochila')
 plt.xticks(np.arange(1, len(knapsack_values) + 1))
-plt.yticks(np.arange(0, np.max(knapsack_values) + 1, 5))  # Valores de y de 5 em 5
+plt.yticks(np.arange(0, np.max(knapsack_values) + 1, 5))
 plt.grid(axis='y', linestyle='dashed')
 plt.show()
