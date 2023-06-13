@@ -4,14 +4,11 @@ import main.java.org.luaneric.backpack.BackpackProblemSolve;
 import main.java.org.luaneric.binaryThree.CustomBinaryNode;
 import main.java.org.luaneric.binaryThree.CustomBinaryTree;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Paths;
 import java.time.Clock;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -27,6 +24,7 @@ public class Main {
     static String filepath500k = Paths.get("src/main/resources/palavras_500k.txt").toString();
     static String filepath600k = Paths.get("src/main/resources/palavras_600k.txt").toString();
     static String filepath700k = Paths.get("src/main/resources/palavras_700k.txt").toString();
+    static int quant = 5000;
 
     static String[] filepaths = {
             filepath100k,
@@ -49,6 +47,12 @@ public class Main {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    public static void appendLineToFile(String filePath, String lineToAdd) throws IOException {
+        BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true));
+        writer.write(lineToAdd);
+        writer.newLine();
+        writer.close();
     }
 
     public static CustomBinaryTree extractWordsFromFile(String filePath) throws IOException {
@@ -77,11 +81,24 @@ public class Main {
         return matcher.group();
     }
 
+    public static void removeFileIfExists(String filePath) {
+        File file = new File(filePath);
+        if (file.exists()) {
+            file.delete();
+        }
+    }
+
     public static Long[] generateOrderDocument(String filepath, String size, String outputBasepath) throws IOException {
         Long averageAlf = 0L;
         Long averageFreq = 0L;
 
-        for (int i = 0; i < 3; i++) {
+        ArrayList<Long> timesAlf = new ArrayList<>();
+        ArrayList<Long> timesFreq = new ArrayList<>();
+
+        String alftime = "/alftime.txt";
+        String freqtime = "/freqtime.txt";
+
+        for (int i = 0; i < quant; i++) {
             Instant initAlf = clock.instant();
 
             CustomBinaryTree tree = extractWordsFromFile(filepath);
@@ -90,6 +107,7 @@ public class Main {
             Instant endAlf = clock.instant();
 
             Long execTimeAlf = endAlf.toEpochMilli() - initAlf.toEpochMilli();
+            timesAlf.add(execTimeAlf);
 
             System.out.println(
                     "Tempo de execução " + execTimeAlf + " Milissegundos  - tamanho: " + size + " Lexicograficamente");
@@ -105,7 +123,11 @@ public class Main {
 
             Instant endFreq = clock.instant();
 
+
             Long execTimeFreq = endFreq.toEpochMilli() - initFreq.toEpochMilli();
+            timesFreq.add(execTimeFreq);
+
+
 
             System.out.println(
                     "Tempo de execução " + execTimeFreq + " Milissegundos  - tamanho: " + size + " Frequencia");
@@ -113,15 +135,24 @@ public class Main {
             averageFreq += execTimeFreq;
             writeStringToFile(orderedByFreq, outputBasepath + "/frequency" + size + ".txt");
         }
+
+        appendLineToFile(outputBasepath + alftime, timesAlf.toString().replaceAll("\\[|\\]", ""));
+        appendLineToFile(outputBasepath + freqtime, timesFreq.toString().replaceAll("\\[|\\]", ""));
         
-        Long finalTimeFreq = averageFreq / 3;
-        Long finalTimeAlf = averageAlf / 3;
+        Long finalTimeFreq = averageFreq / quant;
+        Long finalTimeAlf = averageAlf / quant;
 
         Long[] times = { finalTimeAlf, finalTimeFreq };
         return times;
     }
 
     public static void main(String[] args) throws IOException {
+        String alftime = "/alftime.txt";
+        String freqtime = "/freqtime.txt";
+
+        removeFileIfExists(outputPath  + alftime);
+        removeFileIfExists(outputPath + freqtime);
+
         for (String filepath : filepaths) {
 
             System.out.println("\nLendo arquivo " + getSizefromPath(filepath) + ":");

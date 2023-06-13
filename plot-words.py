@@ -1,26 +1,21 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
+def ler_arquivo_numeros(nome_arquivo):
+    vetor_list = []
+
+    with open(nome_arquivo, 'r') as arquivo:
+        for linha in arquivo:
+            numeros = linha.strip().split(',')
+            vetor = [float(numero) for numero in numeros]
+            vetor_list.append(vetor)
+
+    return vetor_list
+
 # Dados brutos
 sizes = [100, 200, 300, 400, 500, 600, 700]  # k
-lexical_times = np.array([
-    [49, 29, 15],  # 100k
-    [28, 31, 25],  # 200k
-    [37, 48, 30],  # 300k
-    [42, 41, 45],  # 400k
-    [87, 48, 64],  # 500k
-    [115, 68, 90],  # 600k
-    [88, 109, 69]  # 700k
-])
-frequency_times = np.array([
-    [8, 2, 3],  # 100k
-    [3, 3, 3],  # 200k
-    [3, 3, 3],  # 300k
-    [25, 19, 5],  # 400k
-    [6, 6, 6],  # 500k
-    [7, 8, 6],  # 600k
-    [7, 9, 8]  # 700k
-])
+lexical_times = np.array(ler_arquivo_numeros("/home/abas/Desktop/personal/faculdade/paa/algorithms/out/alftime.txt"))
+frequency_times = np.array(ler_arquivo_numeros("/home/abas/Desktop/personal/faculdade/paa/algorithms/out/freqtime.txt"))
 
 # Médias e desvios padrão
 lexical_means = np.mean(lexical_times, axis=1)
@@ -45,3 +40,6 @@ plt.grid(axis='y', linestyle='dashed')
 plt.legend()
 plt.tight_layout()
 plt.show()
+
+# Exportar o gráfico como PNG
+plt.savefig('grafico.png', dpi=400)
