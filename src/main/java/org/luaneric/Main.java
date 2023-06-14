@@ -155,6 +155,15 @@ public class Main {
         return times;
     }
 
+    public static void renderReport(String method, Long[] times) {
+        System.out.println("Metodo: " + method);
+        System.out.println("Relatório das médias: ");
+        System.out.println("Alfabeticamente (com leitura de arquivo): "+ times[0]);
+        System.out.println("Reordenando por frequencia: " + times[1]);
+        System.out.println("--------------------------------------------------------------------");
+        System.out.println();
+    }
+
     public static void main(String[] args) throws IOException {
         String alftime = "/alftime.txt";
         String freqtime = "/freqtime.txt";
@@ -169,10 +178,7 @@ public class Main {
             Long[] times = generateOrderDocument(filepath, getSizefromPath(filepath),
                     outputPath);
 
-            System.out.println("Relatorio das médias: ");
-            System.out.println("Alfabeticamente (com leitura de arquivo): " + times[0]);
-            System.out.println("Reordenando para frequência: " + times[1]);
-            System.out.println("----------------------------------------------------------------------\n");
+           renderReport("Arvore avl com redução de problema", times);
         }
 
         System.out.println("\nProblema da mochila:");
