@@ -125,7 +125,7 @@ public class Main {
                 if(frequencyComparision != 0) {
                     return frequencyComparision;
                 } else {
-                    return c1.getNodeValue().toString().compareTo(c2.toString());
+                    return compareByWord(c1, c2);
                 }
             });
             String orderedByFreq = tree.printInOrder();
