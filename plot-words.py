@@ -38,7 +38,7 @@ plt.figure(figsize=(12, 6))
 bar1 = plt.bar(index, lexical_means, bar_width, yerr=lexical_std, alpha=0.7, capsize=7, label='Lexicográfica')
 bar2 = plt.bar(index + bar_width, frequency_means, bar_width, yerr=frequency_std, alpha=0.7, capsize=7, label='Frequência')
 
-plt.xlabel('Tamanho do arquivo (k)')
+plt.xlabel('Quantidade de palavras (mil)')
 plt.ylabel('Tempo de execução (ms)')
 plt.title(chart_title)
 plt.xticks(index + bar_width / 2, sizes)
