@@ -1,5 +1,5 @@
 ### IntelliJ IDEA ###
-out/
+out/production
 !**/src/main/**/out/
 !**/src/test/**/out/
 
@@ -28,5 +28,8 @@ bin/
 ### Mac OS ###
 .DS_Store
 
+### Python ###
 myenv
 env
+venv
+myvenv

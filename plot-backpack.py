@@ -12,6 +12,8 @@ knapsack_values = np.array([44.75, 44.875, 45.0, 52.111111111111114, 52.22222222
                             68.77777777777777, 68.88888888888889, 69.0, 77.33333333333333, 
                             77.66666666666667, 78.0])
 
+chart_file_name = 'out/grafico-mochila.png'
+
 # Número de execuções
 executions = np.arange(1, len(knapsack_values) + 1)
 
@@ -25,4 +27,6 @@ plt.ylabel('Valor máximo da mochila')
 plt.xticks(np.arange(1, len(knapsack_values) + 1))
 plt.yticks(np.arange(0, np.max(knapsack_values) + 1, 5))
 plt.grid(axis='y', linestyle='dashed')
-plt.show()
+
+# Exportar o gráfico como PNG
+plt.savefig(chart_file_name, dpi=400)
