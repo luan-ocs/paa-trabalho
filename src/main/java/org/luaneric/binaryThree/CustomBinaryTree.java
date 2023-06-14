@@ -45,7 +45,7 @@ public class CustomBinaryTree {
                 insertRecursive(compareNode.getRight(), insert);
             }
         } else {
-            compareNode.setFrequency(compareNode.getFrequency() + 1);
+            compareNode.addFrequency();
         }
     }
 

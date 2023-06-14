@@ -23,6 +23,10 @@ public class CustomBinaryNode {
         this.value.setFrequency(frequency);
     }
 
+    public void addFrequency() {
+        this.value.setFrequency(this.value.getFrequency() + 1);
+    }
+
     public int getBalance() {
         return balance;
     }

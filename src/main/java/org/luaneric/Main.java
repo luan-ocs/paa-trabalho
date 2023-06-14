@@ -24,7 +24,7 @@ public class Main {
     static String filepath500k = Paths.get("src/main/resources/palavras_500k.txt").toString();
     static String filepath600k = Paths.get("src/main/resources/palavras_600k.txt").toString();
     static String filepath700k = Paths.get("src/main/resources/palavras_700k.txt").toString();
-    static int quant = 5000;
+    static int quant = 3;
 
     static String[] filepaths = {
             filepath100k,
@@ -118,7 +118,16 @@ public class Main {
 
             Instant initFreq = clock.instant();
 
-            tree.setFunctionCompare((c1, c2) -> c2.getFrequency() - c1.getFrequency());
+            tree.setFunctionCompare((c1, c2) -> {
+
+                int frequencyComparision = Integer.compare(c1.getFrequency(), c2.getFrequency());
+
+                if(frequencyComparision != 0) {
+                    return frequencyComparision;
+                } else {
+                    return c1.getNodeValue().toString().compareTo(c2.toString());
+                }
+            });
             String orderedByFreq = tree.printInOrder();
 
             Instant endFreq = clock.instant();

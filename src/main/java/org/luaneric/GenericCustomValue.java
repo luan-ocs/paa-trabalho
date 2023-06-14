@@ -6,7 +6,7 @@ public class GenericCustomValue<T> {
 
     public GenericCustomValue(T value) {
         this.value = value;
-        this.frequency = 0;
+        this.frequency = 1;
     }
 
     public T getTreeCustomValue() {
